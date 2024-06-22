@@ -16,7 +16,7 @@
     }
 </script>
 <div id="viewbox">
-    available images
+    Matched images
 </div>
     <section class="row">
         <h2>Search for Matches</h2>
@@ -35,7 +35,6 @@
         width: 100%;
     }
     section {
-        margin: 1rem 0;
         padding: 1rem;
         border: 1px solid #ccc;
         border-radius: 8px;
@@ -44,7 +43,6 @@
         text-align: center;
     }
     h2 {
-        margin-bottom: 1rem;
         width: 100%;
         text-align: center;
     }
@@ -52,7 +50,6 @@
         margin-bottom: 1rem;
     }
     .preview-box {
-        margin-top: 1rem;
         border: 1px solid #ccc;
         border-radius: 8px;
         padding: 0.5rem;
