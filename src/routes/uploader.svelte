@@ -1,10 +1,40 @@
 <script lang="ts">
+import { getFaceFeatures,getDistance} from "$lib/facematcher";
 
-    import { getFaceFeatures, getDistance } from "$lib/facematcher";
-
+    let uploadFiles: File[] = [];
+    let previewSrcs: string[] = [];
     let searchFile: File;
     let previewimg = "";
-    let matches: { filename: string; matchPercentage: number }[] = [];
+    export let matches: { filename: string; matchPercentage: number }[] = [];
+
+    async function handleUpload(event: Event) {
+        const input = event.target as HTMLInputElement;
+        if (input.files) {
+            uploadFiles = Array.from(input.files);
+            previewSrcs = uploadFiles.map((file) => URL.createObjectURL(file));
+            console.log("Uploaded files:", uploadFiles);
+        }
+    }
+
+
+    async function submitUpload() {
+        for (const imageFile of uploadFiles) {
+            
+            const faceFeatures = await getFaceFeatures(imageFile);
+            if (faceFeatures) {
+                const storedData = {
+                    filename: imageFile.name,
+                    faceFeatures,
+                };
+                localStorage.setItem(
+                    `faceFeatures_${imageFile.name}`,
+                    JSON.stringify(storedData),
+                );
+            }
+        }
+    }
+
+
 
     async function handleSearch(event: Event) {
         const input = event.target as HTMLInputElement;
@@ -50,28 +80,41 @@
     }
 </script>
 
-<div id="viewbox" class="row">
-    <h2>Matched Images</h2>
-    {#if matches.length > 0}
-        <ul>
-            {#each matches as match}
-                <li>
-                    <img
-                        src={`/uploads/${match.filename}`}
-                        alt="Matched items"
-                    />
-                    <p>{match.filename} - {match.matchPercentage}%</p>
-                </li>
-            {/each}
-        </ul>
-    {:else}
-        <p>No matches found.</p>
-    {/if}
-</div>
 
 <section class="row">
-    <h2>Upload Images</h2>
-    <div class="upload-container">
+    <div class="upload-container column">
+        <h2>Upload Images to Database</h2>
+        <label for="file-upload" class="button">
+            <input
+                type="file"
+                id="file-upload"
+                accept="image/*"
+                multiple
+                on:change={handleUpload}
+            />
+            <span>Select Images</span>
+        </label>
+        <button
+            type="button"
+            on:click={submitUpload}
+            disabled={!uploadFiles.length}
+        >
+            Upload
+        </button>
+    </div>
+    <div class="preview-box">
+        {#if previewSrcs.length > 0}
+            {#each previewSrcs as src}
+                <img {src} alt="Upload Preview" />
+            {/each}
+        {/if}
+    </div>
+</section>
+
+
+<section class="row">
+    <div class="upload-container column">
+        <h2>Match Images from Database</h2>
         <label for="file-match" class="button">
             <input
                 type="file"
@@ -79,9 +122,9 @@
                 accept="image/*"
                 on:change={handleSearch}
             />
-            <span>Select Images</span>
+            <span>Select Image</span>
         </label>
-        <button type="button" disabled={!searchFile} on:click={submitSearch}>Upload</button>
+        <button type="button" disabled={!searchFile} on:click={submitSearch}>search</button>
     </div>
     <div class="preview-box">
         {#if previewimg}
@@ -91,23 +134,12 @@
 </section>
 
 <style>
-    #viewbox {
-        height: 70%;
-        width: 100%;
-        flex-wrap: wrap;
-    }
-
     section {
         padding: 1rem;
         border: 1px solid #ccc;
         border-radius: 8px;
         width: 100%;
-        height: 30%;
-        text-align: center;
-    }
-
-    h2 {
-        width: 100%;
+        height: 45%;
         text-align: center;
     }
 
@@ -115,7 +147,7 @@
         border: 1px solid #ccc;
         border-radius: 8px;
         padding: 0.2rem;
-        height: 80%;
+        height: 95%;
         width: 50%;
         overflow-y: scroll;
         overflow-x: hidden;
@@ -125,7 +157,7 @@
     }
 
     .preview-box img {
-        max-width: 80%;
+        max-width: 90%;
         height: auto;
         border-radius: 4px;
         margin: 0.5rem;
@@ -136,21 +168,16 @@
     }
 
     .preview-box::-webkit-scrollbar-thumb {
-        background-color: #888;
+        background: #ccc;
         border-radius: 4px;
     }
 
-    .preview-box::-webkit-scrollbar-track {
-        background: #f1f1f1;
+    .upload-container {
+        width: 50%;
     }
 
-    .upload-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin: 1rem;
-    }
     .upload-container input[type="file"] {
         display: none;
     }
+
 </style>

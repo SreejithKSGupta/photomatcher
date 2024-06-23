@@ -21,7 +21,7 @@
     --text-color: #e0e0e0;
     --primary-color: #1e90ff;
     --primary-dark-color:#001f41;
-    --secondary-color: #adb5bd;
+    --secondary-color: #316600;
     --accent-color: #20c997;
     --border-color: #444444;
     --hover-background-color: #040f33;
@@ -63,6 +63,11 @@ button, .button {
     border-radius: 20px;
     transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
+
+.button{
+    background-color: var(--secondary-color);
+}
+
 button:hover, .button:hover {
     background-color: var(--primary-dark-color);
     color: var(--hover-text-color);
@@ -79,11 +84,11 @@ button:hover, .button:hover {
     transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
   }
   
-  .card:hover {
+  /* .card:hover {
     background-color: var(--card-hover-color);
     color: var(--hover-text-color);
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-  }
+  } */
 
 .row {
     display: flex;

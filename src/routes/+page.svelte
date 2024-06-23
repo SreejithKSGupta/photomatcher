@@ -1,6 +1,6 @@
 <script lang="ts">
-  import Matcher from "./matcher/matcher.svelte";
-  import Uploader from "./uploader/uploader.svelte";
+  import Matcher from "./matcher.svelte";
+  import Uploader from "./uploader.svelte";
   import {loadModels } from "$lib/facematcher";
   import { onMount } from "svelte";
   onMount(() => {
