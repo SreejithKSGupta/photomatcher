@@ -1,55 +1,108 @@
 <script lang="ts">
+    import { onMount } from 'svelte';
+    import * as faceapi from "face-api.js";
     let uploadFiles: File[] = [];
     let previewSrcs: string[] = [];
 
-    function handleUpload(event: Event) {
+    async function loadModels() {
+        try {
+            const MODEL_URL = "/models";
+            await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL);
+            await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
+            await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
+            console.log('Models loaded');
+        } catch (error) {
+            console.error('Error loading models:', error);
+        }
+    }
+
+    onMount(() => {
+        loadModels();
+    });
+
+    async function handleUpload(event: Event) {
         const input = event.target as HTMLInputElement;
         if (input.files) {
             uploadFiles = Array.from(input.files);
-            previewSrcs = uploadFiles.map(file => URL.createObjectURL(file));
+            previewSrcs = uploadFiles.map((file) => URL.createObjectURL(file));
             console.log("Uploaded files:", uploadFiles);
         }
     }
 
-    function submitUpload() {
-        // Implement the logic to submit the upload files
-        alert("Images uploaded for face recognition.");
+    async function getFaceFeatures(image: HTMLImageElement) {
+        const detections = await faceapi.detectSingleFace(image)
+                                        .withFaceLandmarks()
+                                        .withFaceDescriptor();
+        
+        if (!detections) {
+            console.log("No face detected");
+            return null;
+        }
+        
+        const landmarks = detections.landmarks;
+        const descriptor = detections.descriptor;
+
+        console.log("Facial Landmarks:", landmarks.positions);
+        console.log("Face Descriptor:", Array.from(descriptor));
+
+        return {
+            landmarks: landmarks.positions,
+            descriptor: Array.from(descriptor)
+        };
+    }
+
+async function submitUpload() {
+        for (const imageFile of uploadFiles) {
+            const image = await faceapi.bufferToImage(imageFile);
+            const faceFeatures = await getFaceFeatures(image);
+            if (faceFeatures) {
+                const storedData = {
+                    filename: imageFile.name,
+                    faceFeatures
+                };
+                localStorage.setItem(`faceFeatures_${imageFile.name}`, JSON.stringify(storedData));
+            }
+        }
     }
 </script>
 
-<div id="viewbox" class="row">
-    available images
-</div>
 
+
+
+
+<div id="viewbox" class="row">available images</div>
 <section class="row">
     <h2>Upload Images</h2>
     <div class="upload-container">
-     <label for="file-input">
-    <input type="file" id="file-input" accept="image/*" multiple on:change={handleUpload} />
-    <span>Select Images</span>
-  </label>
-  <button type="button" on:click={submitUpload} disabled={!uploadFiles.length}>Upload</button>
+        <label for="file-input">
+            <input
+                type="file"
+                id="file-input"
+                accept="image/*"
+                multiple
+                on:change={handleUpload}
+            />
+            <span>Select Images</span>
+        </label>
+        <button
+            type="button"
+            on:click={submitUpload}
+            disabled={!uploadFiles.length}>Upload</button>
     </div>
     <div class="preview-box">
-    {#if previewSrcs.length > 0}
+        {#if previewSrcs.length > 0}
             {#each previewSrcs as src}
-                <img src={src} alt="upload Preview" />
+                <img {src} alt="Upload Preview" />
             {/each}
-    {/if}
-</div>
+        {/if}
+    </div>
 </section>
-
 <style>
-    #viewbox{
+    #viewbox {
         height: 70%;
         width: 100%;
         flex-wrap: wrap;
     }
-
-    /* #viewbox img {
-        width: 300px;
-        height: 300px;
-    } */
 
     section {
         padding: 1rem;
@@ -89,46 +142,46 @@
     }
     .preview-box::-webkit-scrollbar-thumb {
         background-color: #888;
-        border-radius: 4px; 
+        border-radius: 4px;
     }
     .preview-box::-webkit-scrollbar-track {
         background: #f1f1f1;
     }
     .upload-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 1rem;
-  }
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 1rem;
+    }
 
-  .upload-container label {
-    display: inline-block;
-    cursor: pointer;
-    padding: 0.5rem 1rem;   
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    background-color: var(--accent-color);
-  }
+    .upload-container label {
+        display: inline-block;
+        cursor: pointer;
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        background-color: var(--accent-color);
+    }
 
-  .upload-container label:hover {
-    background-color: #ddd;
-  }
+    .upload-container label:hover {
+        background-color: #ddd;
+    }
 
-  .upload-container input[type="file"] {
-    display: none;
-  }
+    .upload-container input[type="file"] {
+        display: none;
+    }
 
-  .upload-container button {
-    cursor: pointer;
-    opacity: 0.7;
-  }
+    .upload-container button {
+        cursor: pointer;
+        opacity: 0.7;
+    }
 
-  .upload-container button:hover {
-    opacity: 1; 
-  }
+    .upload-container button:hover {
+        opacity: 1;
+    }
 
-  .upload-container button:disabled {
-    opacity: 0.5;
-    cursor: default;
-  }
+    .upload-container button:disabled {
+        opacity: 0.5;
+        cursor: default;
+    }
 </style>
