@@ -1,11 +1,12 @@
 <script lang="ts">
-import { getFaceFeatures,getDistance} from "$lib/facematcher";
+import { getFaceFeatures,getDistance,matches} from "$lib/facematcher";
+import {saveimage} from "$lib/saveimagedata";
 
     let uploadFiles: File[] = [];
     let previewSrcs: string[] = [];
     let searchFile: File;
     let previewimg = "";
-    export let matches: { filename: string; matchPercentage: number }[] = [];
+    export let matchess: { filename: string; matchPercentage: number }[] = [];
 
     async function handleUpload(event: Event) {
         const input = event.target as HTMLInputElement;
@@ -15,7 +16,6 @@ import { getFaceFeatures,getDistance} from "$lib/facematcher";
             console.log("Uploaded files:", uploadFiles);
         }
     }
-
 
     async function submitUpload() {
         for (const imageFile of uploadFiles) {
@@ -30,11 +30,10 @@ import { getFaceFeatures,getDistance} from "$lib/facematcher";
                     `faceFeatures_${imageFile.name}`,
                     JSON.stringify(storedData),
                 );
+                saveimage(imageFile);
             }
         }
     }
-
-
 
     async function handleSearch(event: Event) {
         const input = event.target as HTMLInputElement;
@@ -55,7 +54,7 @@ import { getFaceFeatures,getDistance} from "$lib/facematcher";
     }
 
     async function matchdata(descriptor: any) {
-        matches = [];
+        matchess = [];
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
             if (key && key.startsWith("faceFeatures_")) {
@@ -67,16 +66,18 @@ import { getFaceFeatures,getDistance} from "$lib/facematcher";
                     const matchPercentage = ((1 - distance) * 100).toFixed(2);
 
                     if (Number(matchPercentage) > 0) {
-                        matches.push({
+                        matchess.push({
                             filename: storedData.filename,
                             matchPercentage: parseFloat(matchPercentage),
                         });
+                      
                     }
                 }
             }
         }
 
-        matches.sort((a, b) => b.matchPercentage - a.matchPercentage);
+        matchess.sort((a, b) => b.matchPercentage - a.matchPercentage);
+        matches.set(matchess)
     }
 </script>
 
