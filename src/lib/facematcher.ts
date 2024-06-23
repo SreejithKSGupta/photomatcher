@@ -1,6 +1,5 @@
 import * as faceapi from "face-api.js";
-import { onMount } from "svelte";
-async function loadModels() {
+export async function loadModels() {
     try {
         const MODEL_URL = "/models";
         await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL);
@@ -12,12 +11,9 @@ async function loadModels() {
     }
 }
 
-    onMount(async () => {
-        await loadModels();
-    });    
 
-
-export async function getFaceFeatures(image: HTMLImageElement) {
+export     async function getFaceFeatures(imageFile: Blob) {
+    const image = await faceapi.bufferToImage(imageFile);
     const detections = await faceapi.detectSingleFace(image)
                                    .withFaceLandmarks()
                                    .withFaceDescriptor();
@@ -30,9 +26,17 @@ export async function getFaceFeatures(image: HTMLImageElement) {
     const { landmarks, descriptor } = detections;
     console.log("Facial Landmarks:", landmarks.positions);
     console.log("Face Descriptor:", Array.from(descriptor));
-
-    return {
+   let  resultdata = {
         landmarks: landmarks.positions,
         descriptor: Array.from(descriptor),
-    };
+    }
+    return  resultdata;
+}
+
+export function getDistance (disc1: Float32Array | number[], disc2: Float32Array | number[]): number {
+    const distance = faceapi.euclideanDistance(
+        disc1,
+        disc2,
+    );
+    return distance;
 }

@@ -1,4 +1,3 @@
-// src/routes/load-models.ts
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const GET: RequestHandler = async ({ fetch }) => {
@@ -12,6 +11,6 @@ export const GET: RequestHandler = async ({ fetch }) => {
         await Promise.all(modelUrls.map(url => fetch(url)));
         return new Response('Models loaded', { status: 200 });
     } catch (error) {
-        return new Response('Failed to load models', { status: 500 });
+        return new Response('Failed  to load models', { status: 500 });
     }
 };

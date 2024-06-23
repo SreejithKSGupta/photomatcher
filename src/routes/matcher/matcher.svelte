@@ -1,38 +1,30 @@
 <script lang="ts">
-    import { onMount } from "svelte";
-    import { getFaceFeatures,getDistance, loadModels } from "../facematcher";
+
+    import { getFaceFeatures, getDistance } from "$lib/facematcher";
 
     let searchFile: File;
-    let previewSrc = "";
+    let previewimg = "";
     let matches: { filename: string; matchPercentage: number }[] = [];
-
-
-    onMount(() => {
-        loadModels();
-    });
 
     async function handleSearch(event: Event) {
         const input = event.target as HTMLInputElement;
         if (input.files) {
             searchFile = input.files[0];
-            previewSrc = URL.createObjectURL(searchFile);
+            previewimg = URL.createObjectURL(searchFile);
             console.log("Search file:", searchFile);
         }
     }
 
-
     async function submitSearch() {
-        if (!searchFile) {
-            alert("Please select a file to search.");
-            return;
-        }
-
         const resultdata = await getFaceFeatures(searchFile);
         if (!resultdata!.descriptor) {
             alert("No face detected in the search image.");
             return;
         }
+        matchdata(resultdata?.descriptor);
+    }
 
+    async function matchdata(descriptor: any) {
         matches = [];
         for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
@@ -41,9 +33,8 @@
                 if (storedDataStr) {
                     const storedData = JSON.parse(storedDataStr);
                     const storedDescriptor = storedData.faceFeatures.descriptor;
-                    const distance =  getDistance(resultdata!.descriptor,storedDescriptor,
-                    );
-                    const matchPercentage = ((1 - distance) * 100).toFixed(2); 
+                    const distance = getDistance(descriptor, storedDescriptor);
+                    const matchPercentage = ((1 - distance) * 100).toFixed(2);
 
                     if (Number(matchPercentage) > 0) {
                         matches.push({
@@ -65,7 +56,10 @@
         <ul>
             {#each matches as match}
                 <li>
-                    <img src={`/uploads/${match.filename}`} alt="Matched items" />
+                    <img
+                        src={`/uploads/${match.filename}`}
+                        alt="Matched items"
+                    />
                     <p>{match.filename} - {match.matchPercentage}%</p>
                 </li>
             {/each}
@@ -78,20 +72,20 @@
 <section class="row">
     <h2>Upload Images</h2>
     <div class="upload-container">
-        <label for="file-input" class="button">
+        <label for="file-match" class="button">
             <input
                 type="file"
-                id="file-input"
+                id="file-match"
                 accept="image/*"
                 on:change={handleSearch}
             />
             <span>Select Images</span>
         </label>
-        <button type="button" on:click={submitSearch}>Upload</button>
+        <button type="button" disabled={!searchFile} on:click={submitSearch}>Upload</button>
     </div>
     <div class="preview-box">
-        {#if previewSrc}
-            <img src={previewSrc} alt="upload Preview" />
+        {#if previewimg}
+            <img src={previewimg} alt="upload Preview" />
         {/if}
     </div>
 </section>

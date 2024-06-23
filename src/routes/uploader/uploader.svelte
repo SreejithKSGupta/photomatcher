@@ -1,15 +1,8 @@
 <script lang="ts">
-    import { onMount } from "svelte";
-    import { getFaceFeatures, loadModels } from "../facematcher";
+import { getFaceFeatures} from "$lib/facematcher";
 
     let uploadFiles: File[] = [];
     let previewSrcs: string[] = [];
-
-
-
-    onMount(() => {
-        loadModels();
-    });
 
     async function handleUpload(event: Event) {
         const input = event.target as HTMLInputElement;
@@ -46,10 +39,10 @@
 <section class="row">
     <h2>Upload Images</h2>
     <div class="upload-container">
-        <label for="file-input" class="button">
+        <label for="file-upload" class="button">
             <input
                 type="file"
-                id="file-input"
+                id="file-upload"
                 accept="image/*"
                 multiple
                 on:change={handleUpload}
