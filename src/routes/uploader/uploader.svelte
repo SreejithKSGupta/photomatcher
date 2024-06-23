@@ -1,20 +1,11 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import * as faceapi from "face-api.js";
+    import { getFaceFeatures, loadModels } from "../facematcher";
+
     let uploadFiles: File[] = [];
     let previewSrcs: string[] = [];
 
-    async function loadModels() {
-        try {
-            const MODEL_URL = "/models";
-            await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL);
-            await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
-            await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
-            console.log("Models loaded");
-        } catch (error) {
-            console.error("Error loading models:", error);
-        }
-    }
+
 
     onMount(() => {
         loadModels();
@@ -29,33 +20,11 @@
         }
     }
 
-    async function getFaceFeatures(image: HTMLImageElement) {
-        const detections = await faceapi
-            .detectSingleFace(image)
-            .withFaceLandmarks()
-            .withFaceDescriptor();
-
-        if (!detections) {
-            console.log("No face detected");
-            return null;
-        }
-
-        const landmarks = detections.landmarks;
-        const descriptor = detections.descriptor;
-
-        console.log("Facial Landmarks:", landmarks.positions);
-        console.log("Face Descriptor:", Array.from(descriptor));
-
-        return {
-            landmarks: landmarks.positions,
-            descriptor: Array.from(descriptor),
-        };
-    }
 
     async function submitUpload() {
         for (const imageFile of uploadFiles) {
-            const image = await faceapi.bufferToImage(imageFile);
-            const faceFeatures = await getFaceFeatures(image);
+            
+            const faceFeatures = await getFaceFeatures(imageFile);
             if (faceFeatures) {
                 const storedData = {
                     filename: imageFile.name,
@@ -70,11 +39,14 @@
     }
 </script>
 
-<div id="viewbox" class="row">available images</div>
+<div id="viewbox" class="row">
+    Available images
+</div>
+
 <section class="row">
     <h2>Upload Images</h2>
     <div class="upload-container">
-        <label for="file-input">
+        <label for="file-input" class="button">
             <input
                 type="file"
                 id="file-input"
@@ -87,8 +59,10 @@
         <button
             type="button"
             on:click={submitUpload}
-            disabled={!uploadFiles.length}>Upload</button
+            disabled={!uploadFiles.length}
         >
+            Upload
+        </button>
     </div>
     <div class="preview-box">
         {#if previewSrcs.length > 0}
@@ -114,13 +88,12 @@
         height: 30%;
         text-align: center;
     }
+
     h2 {
         width: 100%;
         text-align: center;
     }
-    input[type="file"] {
-        margin-bottom: 1rem;
-    }
+
     .preview-box {
         border: 1px solid #ccc;
         border-radius: 8px;
@@ -133,22 +106,27 @@
         flex-direction: column;
         align-items: center;
     }
+
     .preview-box img {
         max-width: 80%;
         height: auto;
         border-radius: 4px;
         margin: 0.5rem;
     }
+
     .preview-box::-webkit-scrollbar {
         width: 8px;
     }
+
     .preview-box::-webkit-scrollbar-thumb {
         background-color: #888;
         border-radius: 4px;
     }
+
     .preview-box::-webkit-scrollbar-track {
         background: #f1f1f1;
     }
+
     .upload-container {
         display: flex;
         flex-direction: column;
@@ -156,34 +134,8 @@
         margin: 1rem;
     }
 
-    .upload-container label {
-        display: inline-block;
-        cursor: pointer;
-        padding: 0.5rem 1rem;
-        border: 1px solid var(--border-color);
-        border-radius: 4px;
-        background-color: var(--accent-color);
-    }
-
-    .upload-container label:hover {
-        background-color: #ddd;
-    }
-
     .upload-container input[type="file"] {
         display: none;
     }
 
-    .upload-container button {
-        cursor: pointer;
-        opacity: 0.7;
-    }
-
-    .upload-container button:hover {
-        opacity: 1;
-    }
-
-    .upload-container button:disabled {
-        opacity: 0.5;
-        cursor: default;
-    }
 </style>

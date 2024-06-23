@@ -53,7 +53,7 @@ a:hover {
     color: var(--link-hover-color);
 }
 
-button {
+button, .button {
     background-color: var(--primary-color);
     color: var(--text-color);
     border: 1px solid var(--border-color);
@@ -63,7 +63,7 @@ button {
     border-radius: 20px;
     transition: background-color 0.3s, color 0.3s, border-color 0.3s;
 }
-button:hover {
+button:hover, .button:hover {
     background-color: var(--primary-dark-color);
     color: var(--hover-text-color);
 }
