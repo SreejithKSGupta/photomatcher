@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
+    import { onMount } from "svelte";
     import * as faceapi from "face-api.js";
     let uploadFiles: File[] = [];
     let previewSrcs: string[] = [];
@@ -10,9 +10,9 @@
             await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL);
             await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
             await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
-            console.log('Models loaded');
+            console.log("Models loaded");
         } catch (error) {
-            console.error('Error loading models:', error);
+            console.error("Error loading models:", error);
         }
     }
 
@@ -30,15 +30,16 @@
     }
 
     async function getFaceFeatures(image: HTMLImageElement) {
-        const detections = await faceapi.detectSingleFace(image)
-                                        .withFaceLandmarks()
-                                        .withFaceDescriptor();
-        
+        const detections = await faceapi
+            .detectSingleFace(image)
+            .withFaceLandmarks()
+            .withFaceDescriptor();
+
         if (!detections) {
             console.log("No face detected");
             return null;
         }
-        
+
         const landmarks = detections.landmarks;
         const descriptor = detections.descriptor;
 
@@ -47,28 +48,27 @@
 
         return {
             landmarks: landmarks.positions,
-            descriptor: Array.from(descriptor)
+            descriptor: Array.from(descriptor),
         };
     }
 
-async function submitUpload() {
+    async function submitUpload() {
         for (const imageFile of uploadFiles) {
             const image = await faceapi.bufferToImage(imageFile);
             const faceFeatures = await getFaceFeatures(image);
             if (faceFeatures) {
                 const storedData = {
                     filename: imageFile.name,
-                    faceFeatures
+                    faceFeatures,
                 };
-                localStorage.setItem(`faceFeatures_${imageFile.name}`, JSON.stringify(storedData));
+                localStorage.setItem(
+                    `faceFeatures_${imageFile.name}`,
+                    JSON.stringify(storedData),
+                );
             }
         }
     }
 </script>
-
-
-
-
 
 <div id="viewbox" class="row">available images</div>
 <section class="row">
@@ -87,7 +87,8 @@ async function submitUpload() {
         <button
             type="button"
             on:click={submitUpload}
-            disabled={!uploadFiles.length}>Upload</button>
+            disabled={!uploadFiles.length}>Upload</button
+        >
     </div>
     <div class="preview-box">
         {#if previewSrcs.length > 0}
@@ -97,6 +98,7 @@ async function submitUpload() {
         {/if}
     </div>
 </section>
+
 <style>
     #viewbox {
         height: 70%;
