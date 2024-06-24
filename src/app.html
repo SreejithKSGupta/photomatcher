@@ -13,7 +13,12 @@
 			const storedTheme = localStorage.getItem('theme') || 'dark';
 			if (storedTheme === 'dark') {
 				document.documentElement.classList.add('dark');
+				document.documentElement.classList.remove('light');
 			}
+			if (storedTheme === 'light') {
+                document.documentElement.classList.remove('dark');
+				document.documentElement.classList.add('light');
+            }
 		})();
 	</script>
 </head>
