@@ -1,36 +1,35 @@
-/* global.css */
 :root {
-    --background-color: #f0f0f0;
-    --text-color: #333333;
-    --primary-color: #003874;
-    --primary-dark-color:#001f41;
-    --secondary-color: #6c757d;
-    --accent-color: #17a2b8;
-    --border-color: #dddddd;
-    --hover-background-color: #001020;
-    --hover-text-color: #000000;
-    --link-color: #007bff;
-    --link-hover-color: #0056b3;
-    --card-color: #e6e6e6;
-    --card-hover-color: #dddddd;
-    --shadow-color: #c0c0c0;
+    --background-color: #f9f9fb;
+    --text-color: #2c2c2c;
+    --primary-color: #4a90e2;
+    --primary-dark-color: #003366;
+    --secondary-color: #013f01;
+    --accent-color: #f39c12;
+    --border-color: #e1e4e8;
+    --hover-background-color: #eaeff3;
+    --hover-text-color: #1f1f1f;
+    --link-color: #2980b9;
+    --link-hover-color: #1c598a;
+    --card-color: #ffffff;
+    --card-hover-color: #f4f4f8;
+    --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
 :root.dark {
-    --background-color: #202020;
-    --text-color: #e0e0e0;
-    --primary-color: #1e90ff;
-    --primary-dark-color:#001f41;
-    --secondary-color: #316600;
-    --accent-color: #20c997;
-    --border-color: #444444;
-    --hover-background-color: #040f33;
-    --hover-text-color: #ffffff;
-    --link-color: #1e90ff;
-    --link-hover-color: #0b5394;
-    --card-color: #181818;
-    --card-hover-color: #000000;
-    --shadow-color: #575757;
+    --background-color: #1e1e2f;
+    --text-color: #c7c7d5;
+    --primary-color: #17376b;
+    --primary-dark-color: #04142b;
+    --secondary-color: #005707;
+    --accent-color: #ffa726;
+    --border-color: #39414e;
+    --hover-background-color: #2a2a3b;
+    --hover-text-color: #f5f5f5;    
+    --link-color: #82b1ff;
+    --link-hover-color: #5a86c1;
+    --card-color: #2c2c3e;
+    --card-hover-color: #39394f;
+    --shadow-color: rgba(0, 0, 0, 0.5);
 }
 
 * {
@@ -84,11 +83,6 @@ button:hover, .button:hover {
     transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
   }
   
-  /* .card:hover {
-    background-color: var(--card-hover-color);
-    color: var(--hover-text-color);
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-  } */
 
 .row {
     display: flex;

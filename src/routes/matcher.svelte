@@ -37,6 +37,7 @@
         <p>No matches found.</p>
     {/if}
 </div>
+
 <style>
 #viewbox {
     display: flex;
