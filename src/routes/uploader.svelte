@@ -13,7 +13,6 @@ import {saveimage} from "$lib/saveimagedata";
         if (input.files) {
             uploadFiles = Array.from(input.files);
             previewSrcs = uploadFiles.map((file) => URL.createObjectURL(file));
-            console.log("Uploaded files:", uploadFiles);
         }
     }
 
@@ -40,7 +39,6 @@ import {saveimage} from "$lib/saveimagedata";
         if (input.files) {
             searchFile = input.files[0];
             previewimg = URL.createObjectURL(searchFile);
-            console.log("Search file:", searchFile);
         }
     }
 

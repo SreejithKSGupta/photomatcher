@@ -1,5 +1,6 @@
 <script lang="ts">
     import { matches } from "$lib/facematcher";
+    import {fetchimage} from "$lib/saveimagedata";
     $:matchess = $matches
 </script>
 
