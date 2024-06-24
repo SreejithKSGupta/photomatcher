@@ -1,7 +1,18 @@
 <script lang="ts">
     import { matches } from "$lib/facematcher";
-    import {fetchimage} from "$lib/saveimagedata";
-    $:matchess = $matches
+    import { fetchimage } from "$lib/saveimagedata";
+    $: matchess = $matches;
+
+    async function setImageUrl(filename: string) {
+        await fetchimage(filename).then((imageUrl) => {
+            const imgElement = document.getElementById(
+                "image" + filename,
+            ) as HTMLImageElement;
+            if (imgElement && imageUrl) {
+                imgElement.src = imageUrl;
+            }
+        });
+    }
 </script>
 
 <div id="viewbox" class="masonry">
@@ -10,15 +21,14 @@
             {#if match.matchPercentage > 50}
                 <div class="image-container">
                     <img
-                        src={`/userimages/${match.filename}`}
+                        id={"image" + match.filename}
+                        src={"./userimages/mam1.jpg"}
                         alt={match.filename}
                         class="overlay-image"
                     />
+                   <div style="display: none;"> {setImageUrl(match.filename)} </div> 
                     <div class="overlay-text row">
                         <p>{match.filename}</p>
-                        <div class="percentage-circle">
-                            <p>{match.matchPercentage}%</p>
-                        </div>
                     </div>
                 </div>
             {/if}
@@ -27,58 +37,67 @@
         <p>No matches found.</p>
     {/if}
 </div>
-
 <style>
-    #viewbox {
-       display: flex;
-       flex-direction: row;
-       flex-wrap: wrap;
-       justify-content: space-evenly;
-    }
+#viewbox {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 20px;
+    gap: 20px;
+}
 
+.image-container {
+    position: relative;
+    width: calc(25% - 20px);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.image-container:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.overlay-image {
+    width: 100%;
+    height: 100%;
+}
+
+.overlay-text {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    color: #ffffff;
+    display: flex;
+    text-align: center;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+    background-color: rgba(0, 0, 0, 0.801);
+    padding: 5px;
+}
+
+.image-container:hover .overlay-text {
+    opacity: 1;
+}
+
+@media (max-width: 1200px) {
     .image-container {
-        position: relative;
-        display: inline-block;
-        overflow: hidden;
-        border-radius: 5px;
-        margin: 5px;
+        width: calc(33.33% - 20px);
     }
+}
 
-    .overlay-image {
-        display: block;
-        width: 12vw; 
-        height: auto; 
-        border-radius: 5px;
-        transition: transform 0.3s ease-in-out;
+@media (max-width: 768px) {
+    .image-container {
+        width: calc(50% - 20px);
     }
+}
 
-    .overlay-text {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        color: white;
-        padding: 10px;
-        border-radius: 0 0 5px 5px;
-        transition: opacity 0.3s ease-in-out;
-        opacity: 1; 
-        justify-content: space-between;
+@media (max-width: 480px) {
+    .image-container {
+        width: calc(100% - 20px);
     }
-
-    .overlay-text p {
-        margin: 0;
-    }
-
-    .percentage-circle {
-        display: inline-block;
-        background-color: #ff7f50;
-        color: white;
-        text-align: center;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        line-height: 40px;
-        margin-left: 5px;
-    }
+}
 </style>

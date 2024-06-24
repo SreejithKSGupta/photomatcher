@@ -29,7 +29,7 @@ import {saveimage} from "$lib/saveimagedata";
                     `faceFeatures_${imageFile.name}`,
                     JSON.stringify(storedData),
                 );
-                saveimage(imageFile);
+                saveimage(imageFile,imageFile.name);
             }
         }
     }
