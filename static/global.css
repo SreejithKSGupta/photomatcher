@@ -1,9 +1,9 @@
 :root {
-    --background-color: #f9f9fb;
-    --text-color: #2c2c2c;
-    --primary-color: #4a90e2;
-    --primary-dark-color: #003366;
-    --secondary-color: #013f01;
+    --background-color: #b1b1b1;
+    --text-color: #000000;
+    --primary-color: #036ee7;
+    --primary-dark-color: #03509c;
+    --secondary-color: #84e484;
     --accent-color: #f39c12;
     --border-color: #e1e4e8;
     --hover-background-color: #eaeff3;
@@ -17,7 +17,7 @@
 
 :root.dark {
     --background-color: #1e1e2f;
-    --text-color: #c7c7d5;
+    --text-color: #ffffff;
     --primary-color: #17376b;
     --primary-dark-color: #04142b;
     --secondary-color: #005707;
@@ -57,6 +57,7 @@ button, .button {
     color: var(--text-color);
     border: 1px solid var(--border-color);
     padding: 10px 20px;
+    font-weight: bolder;
     margin: 10px;
     cursor: pointer;
     border-radius: 20px;
@@ -71,6 +72,10 @@ button:hover, .button:hover {
     background-color: var(--primary-dark-color);
     color: var(--hover-text-color);
 }
+
+ button:disabled:hover{
+    cursor: no-drop;
+  }
 
 .card {
     background-color: var(--card-color);

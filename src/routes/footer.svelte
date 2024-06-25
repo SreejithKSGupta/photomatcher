@@ -2,7 +2,7 @@
     const socialLinks = [
         {
             href: "https://github.com/SreejithKSGupta",
-            imgSrc: "/icons/github.png",
+            imgSrc: "/icons/github.webp",
             alt: "GitHub"
         },
         {
@@ -12,7 +12,7 @@
         },
         {
             href: "https://myportfolio-8fi.pages.dev/",
-            imgSrc: "/icons/portfolio.png",
+            imgSrc: "/icons/portfolio.webp",
             alt: "Portfolio"
         }
     ];

@@ -98,8 +98,9 @@ import {saveimage} from "$lib/saveimagedata";
             on:click={submitUpload}
             disabled={!uploadFiles.length}
         >
-            Upload
+            {uploadFiles.length>0?"upload":"no files selected"}
         </button>
+        <br/>
     </div>
     <div class="preview-box">
         {#if previewSrcs.length > 0}
@@ -123,7 +124,9 @@ import {saveimage} from "$lib/saveimagedata";
             />
             <span>Select Image</span>
         </label>
-        <button type="button" disabled={!searchFile} on:click={submitSearch}>search</button>
+        <button type="button" disabled={!searchFile} on:click={submitSearch}>
+            {searchFile? "match" : "no file selected"}
+        </button>
     </div>
     <div class="preview-box">
         {#if previewimg}
