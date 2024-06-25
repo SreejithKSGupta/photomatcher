@@ -1,13 +1,14 @@
 # Face Recognition Photo Matcher
 
-This project is a web application that allows users to upload photos, extract facial features using face-api.js, and match uploaded photos against stored images. It uses SvelteKit for the frontend and Node.js with Express for the backend to handle file uploads.
+This project is a web application that allows users to upload photos, extract facial features using face-api.js, and match uploaded photos against stored images. The webapp is made with SvelteKit.
 
 ## Features
 
 - Upload images and extract facial features
 - Store facial features and filenames in localStorage
+- Store iamges in indexedDB
 - Search for matches by uploading an image
-- Display matched images with a percentage match
+- Display matched images ordered by match percentage
 
 ## Technologies Used
 
@@ -50,12 +51,12 @@ This project is a web application that allows users to upload photos, extract fa
 1. **Upload Images:**
 
    - Navigate to the upload section of the web app.
-   - Select and upload images. Extracted facial features will be stored in `localStorage` and the images should be copied to userdata folder in static.
+   - Select and upload images. Extracted facial features will be stored in `localStorage` and the images are stored in indexedDB
 
 2. **Search for Matches:**
 
    - Navigate to the search section of the web app.
-   - Upload an image to search for matches. The app will display matched images with a percentage match.
+   - Upload an image to search for matches. The app will display matched images.
 
 ### Project Structure
 
@@ -63,7 +64,6 @@ This project is a web application that allows users to upload photos, extract fa
   - `components/`: Contains reusable Svelte components.
   - `routes/`: Contains route-specific Svelte components.
 - `static/`: Contains static files like the face-api.js models.
-- `userdata/`: Directory where uploaded images are stored.
 
 
 ### Contributing

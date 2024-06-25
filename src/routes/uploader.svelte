@@ -1,6 +1,6 @@
 <script lang="ts">
-import { getFaceFeatures,getDistance,matches} from "$lib/facematcher";
-import {saveimage} from "$lib/saveimagedata";
+    import { getFaceFeatures, getDistance, matches } from "$lib/facematcher";
+    import { saveimage } from "$lib/saveimagedata";
 
     let uploadFiles: File[] = [];
     let previewSrcs: string[] = [];
@@ -18,7 +18,6 @@ import {saveimage} from "$lib/saveimagedata";
 
     async function submitUpload() {
         for (const imageFile of uploadFiles) {
-            
             const faceFeatures = await getFaceFeatures(imageFile);
             if (faceFeatures) {
                 const storedData = {
@@ -29,7 +28,7 @@ import {saveimage} from "$lib/saveimagedata";
                     `faceFeatures_${imageFile.name}`,
                     JSON.stringify(storedData),
                 );
-                saveimage(imageFile,imageFile.name);
+                saveimage(imageFile, imageFile.name);
             }
         }
     }
@@ -68,17 +67,15 @@ import {saveimage} from "$lib/saveimagedata";
                             filename: storedData.filename,
                             matchPercentage: parseFloat(matchPercentage),
                         });
-                      
                     }
                 }
             }
         }
 
         matchess.sort((a, b) => b.matchPercentage - a.matchPercentage);
-        matches.set(matchess)
+        matches.set(matchess);
     }
 </script>
-
 
 <section class="row">
     <div class="upload-container column">
@@ -98,9 +95,9 @@ import {saveimage} from "$lib/saveimagedata";
             on:click={submitUpload}
             disabled={!uploadFiles.length}
         >
-            {uploadFiles.length>0?"upload":"no files selected"}
+            {uploadFiles.length > 0 ? "upload" : "no files selected"}
         </button>
-        <br/>
+        <br />
     </div>
     <div class="preview-box">
         {#if previewSrcs.length > 0}
@@ -110,7 +107,6 @@ import {saveimage} from "$lib/saveimagedata";
         {/if}
     </div>
 </section>
-
 
 <section class="row">
     <div class="upload-container column">
@@ -125,7 +121,7 @@ import {saveimage} from "$lib/saveimagedata";
             <span>Select Image</span>
         </label>
         <button type="button" disabled={!searchFile} on:click={submitSearch}>
-            {searchFile? "match" : "no file selected"}
+            {searchFile ? "match" : "no file selected"}
         </button>
     </div>
     <div class="preview-box">
@@ -150,6 +146,7 @@ import {saveimage} from "$lib/saveimagedata";
         border-radius: 8px;
         padding: 0.2rem;
         height: 95%;
+        min-height: 200px;
         width: 50%;
         overflow-y: scroll;
         overflow-x: hidden;
@@ -180,6 +177,21 @@ import {saveimage} from "$lib/saveimagedata";
 
     .upload-container input[type="file"] {
         display: none;
+    }
+
+    @media screen and (max-width:800px) {
+        section {
+        width: 100%;
+        padding: 5px;
+        margin: 5px;
+        }
+        .upload-container {
+        width: 45%;
+        margin: 5px;
+    }
+    h2 {
+        font-size: 1.2rem;
+    }
     }
 
 </style>
