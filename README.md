@@ -10,6 +10,8 @@ This project is a web application that allows users to upload photos, extract fa
 - Search for matches by uploading an image
 - Display matched images ordered by match percentage
 
+  ![UI of Face Matcher](https://github.com/SreejithKSGupta/photomatcher/assets/72187226/f66f2e44-61f3-4856-b4b5-5991845b8762)
+
 ## Technologies Used
 
 - SvelteKit
